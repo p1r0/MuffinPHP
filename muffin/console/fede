@@ -1,0 +1,42 @@
+<?php
+
+// Configure Doctrine Cli
+// Normally these are arguments to the cli tasks but if they are set here the arguments will be auto-filled and are not required for you to enter them.
+
+require_once
+    dirname(dirname(__FILE__)) .
+    DIRECTORY_SEPARATOR . 'src' .
+    DIRECTORY_SEPARATOR . 'library' .
+    DIRECTORY_SEPARATOR . 'trio' .
+    DIRECTORY_SEPARATOR . 'bootstrap.php';
+
+$app = new Trio_Application();
+$app->setEnvironment('development');
+$app->setup();
+
+
+//FIXME recibir el primer parámetro y usarlo como modulo
+$basePath =
+    dirname(dirname(__FILE__)) .
+    DIRECTORY_SEPARATOR . 'src' .
+    DIRECTORY_SEPARATOR . 'app' .
+    DIRECTORY_SEPARATOR . 'modules' .
+    DIRECTORY_SEPARATOR . 'default' .
+    DIRECTORY_SEPARATOR ;
+
+$config = array('data_fixtures_path'    =>  $basePath."fixtures",
+                'models_path'           =>  $basePath.'models',
+                'migrations_path'       =>  $basePath.'migrations',
+                'sql_path'              =>  $basePath.'sql',
+                'yaml_schema_path'      =>  $basePath.'schema',
+                'generateTableClasses'  =>  true
+        );
+
+//var_dump( $config 
+
+$cli = new Doctrine_Cli($config);
+
+//FIXME sacar el primer parámetro que debe traer el módulo
+$cli->run($_SERVER['argv']);
+?>
+
