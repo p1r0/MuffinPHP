@@ -39,6 +39,7 @@ class Controller
 	
 	protected $renderDefault = true;
 	
+	protected $viewLocale = "";
 	/**
 	 * Inicializa la clase y expone los modelos que se listan 
 	 * en var $uses.
@@ -225,7 +226,7 @@ class Controller
 		}
 		
 		
-		include CLASSPATH."/views/".$view."View.php";
+		include CLASSPATH."/views/".$view."View".$this->viewLocale.".php";
 	}
 	
 	public function paginate(&$model, $options=null)
@@ -316,6 +317,23 @@ class Controller
 		$this->layout = $layout;
 	}
 
+	public function setViewLocale($locale)
+	{
+		if($locale != "")
+		{
+			$this->viewLocale = "_".$locale;
+		}
+		else
+		{
+			$this->viewLocale = "";
+		}
+	}
+	
+	public function getViewLocale()
+	{
+		return str_replace("_", "", $this->viewLocale); 
+	}
+	
 	public function addFilter(Filter $filter)
 	{
 		$this->filters[] = $filter;	

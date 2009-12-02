@@ -56,6 +56,7 @@ class FormHelper extends Helper
 		
 		foreach($data as $option)
 		{
+			$selected = isset($options["value"]) && $option[$value_id] == $options["value"] ? "selected" : "";
 			$str .= "<option value='{$option[$value_id]}'>{$option[$label_id]}</option>";
 		}
 		
