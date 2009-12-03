@@ -22,13 +22,13 @@ class FormHelper extends Helper
 		return $str;
 	}
 	
-	public function end($addSendButton = false)
+	public function end($addSendButton = false, $text = "Send")
 	{
 		$str = "";
 		
 		if($addSendButton)
 		{
-			$str .= '<input type="submit" value="Send" />';
+			$str .= '<input type="submit" value="'.$text.'" />';
 		}
 		
 		$str .= "</form>";
