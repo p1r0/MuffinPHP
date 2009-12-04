@@ -56,8 +56,9 @@ class FormHelper extends Helper
 		
 		foreach($data as $option)
 		{
-			$selected = isset($options["value"]) && $option[$value_id] == $options["value"] ? "selected" : "";
-			$str .= "<option value='{$option[$value_id]}'>{$option[$label_id]}</option>";
+			//$selected = isset($options["value"]) && $option[$value_id] == $options["value"] ? "selected" : "";
+			$selected = isset($options["options"]["name"]) && isset($this->controler->data[$options["options"]["name"]]) && $option[$value_id] == $this->controler->data[$options["options"]["name"]] ? "selected" : "";
+			$str .= "<option value='{$option[$value_id]}' {$selected}>{$option[$label_id]}</option>";
 		}
 		
 		$str .= "</select>";
