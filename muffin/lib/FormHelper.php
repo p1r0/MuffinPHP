@@ -99,7 +99,7 @@ class FormHelper extends Helper
 	{
 		if((!$this->controler->isValid) || ($this->controler->isEdit))
 		{
-			$value = 'value="'.$this->controler->data[$name].'"';
+			$value = $this->controler->data[$name];
 		}
 		else
 		{

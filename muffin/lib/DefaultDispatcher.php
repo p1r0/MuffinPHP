@@ -5,6 +5,7 @@ class DefaultDispatcher extends Dispatcher
 	{
 		$helper = HelperFactory::getHelper("Http");
 		$conf = $helper->parseGet($_GET);
+	
 		
 		try
 		{
