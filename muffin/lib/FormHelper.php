@@ -22,13 +22,18 @@ class FormHelper extends Helper
 		return $str;
 	}
 	
-	public function end($addSendButton = false, $text = "Send")
+	public function end($addSendButton = false, $text = "Send", $showCanlcel = true, $cancelText = "Cancel")
 	{
 		$str = "";
 		
 		if($addSendButton)
 		{
 			$str .= '<input type="submit" value="'.$text.'" />';
+		}
+		
+		if($showCanlcel)
+		{
+			$str .= '<input type="button" value="'.$cancelText.'" onclick="history.go(-1)" />';
 		}
 		
 		$str .= "</form>";
@@ -56,8 +61,11 @@ class FormHelper extends Helper
 		
 		foreach($data as $option)
 		{
-			//$selected = isset($options["value"]) && $option[$value_id] == $options["value"] ? "selected" : "";
 			$selected = isset($options["options"]["name"]) && isset($this->controler->data[$options["options"]["name"]]) && $option[$value_id] == $this->controler->data[$options["options"]["name"]] ? "selected" : "";
+			if($selected == "")
+			{	
+				$selected = isset($options["options"]["value"]) && $option[$value_id] == $options["options"]["value"] ? "selected" : "";
+			}
 			$str .= "<option value='{$option[$value_id]}' {$selected}>{$option[$label_id]}</option>";
 		}
 		

@@ -7,21 +7,21 @@ class DefaultDispatcher extends Dispatcher
 		$conf = $helper->parseGet($_GET);
 	
 		
-		try
-		{
+		/*try
+		{*/
 			$controller = ControllerFactory::getController($conf["controller"]);
 			$controller->applyFilters();
 			$action =  $conf["action"]."Action";
 			$controller->startUp($conf);
 			call_user_func_array(array($controller, $action), $conf["param"]);
 			$controller->render($conf["action"]);
-		}
-		catch (Doctrine_Connection_Exception  $e)
+		//}
+		/*catch (Doctrine_Connection_Exception  $e)
 		{
 			ErrorHandler::displayError("Found a Doctrine connection error.<br>
 									 	Make suere that you have started the Doctrine
 									 	subsystem.<br>");
-		}
+		}*/
 		/*catch (Exception  $e)
 		{
 			

@@ -40,6 +40,8 @@ class Controller
 	protected $renderDefault = true;
 	
 	protected $viewLocale = "";
+	
+	protected $view = null;
 	/**
 	 * Inicializa la clase y expone los modelos que se listan 
 	 * en var $uses.
@@ -158,8 +160,15 @@ class Controller
 		
 		$action[0] = strtoupper($action[0]);
 		
-		$view = strtolower(str_replace("Controller", "", get_class($this)));
-		$view .= "/".$action;
+		if($this->view == null)
+		{
+			$view = strtolower(str_replace("Controller", "", get_class($this)));
+			$view .= "/".$action;
+		}
+		else
+		{
+			$view = $this->view;
+		}
 		
 		if($this->renderDefault)
 		{
@@ -332,6 +341,16 @@ class Controller
 	public function getViewLocale()
 	{
 		return str_replace("_", "", $this->viewLocale); 
+	}
+	
+	public function setView($view)
+	{
+		$this->view = $view;
+	}
+	
+	public function getView()
+	{
+		return $this->view;
 	}
 	
 	public function addFilter(Filter $filter)
