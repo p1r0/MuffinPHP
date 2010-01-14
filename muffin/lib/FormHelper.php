@@ -28,12 +28,12 @@ class FormHelper extends Helper
 		
 		if($addSendButton)
 		{
-			$str .= '<input type="submit" value="'.$text.'" />';
+			$str .= '<input id="btnSubmit" type="submit" value="'.$text.'" />';
 		}
 		
 		if($showCanlcel)
 		{
-			$str .= '<input type="button" value="'.$cancelText.'" onclick="history.go(-1)" />';
+			$str .= '<input id="btnCancel" type="button" value="'.$cancelText.'" onclick="history.go(-1)" />';
 		}
 		
 		$str .= "</form>";

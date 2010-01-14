@@ -3,6 +3,9 @@
  * Representa un Controlador
  *
  */
+
+require "convenience.php";
+
 class Controller
 {
 	/**
@@ -93,7 +96,9 @@ class Controller
 			}
 		}
 		
-		
+		//i18n
+		$i18nFileName = strtolower(str_replace("Controller", "", get_class($this))).$this->viewLocale.'.po';
+		I18nHelper::getInstance()->loadPoFile(I18N_PATH.'/'.$i18nFileName);
 	}
 	
 	public function startUp($args = null)
