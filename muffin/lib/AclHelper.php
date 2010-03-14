@@ -3,10 +3,11 @@ class AclHelper extends Helper
 {
 	public function getModulesList()
 	{
+		$arModules = array();
 		$ann = HelperFactory::getHelper("Annotations");
 		
 		$ctls = $this->getControllers();
-		print "<pre>";
+
 		foreach($ctls as $controller)
 		{
 			
@@ -15,17 +16,22 @@ class AclHelper extends Helper
 			if($annotations !== false)
 			{
 				if(isset($annotations["@useAcl"]) && $annotations["@useAcl"] == "true")
-				{
-					echo $this->getModuleName($controller, $annotations);				
-					$this->getControllerActions($controller);	
+				{	
+					$data = array("name"=>$rc->getName(),
+								  "friendlyName"=>$this->getModuleName($rc->getName(), $annotations), 
+								  "methods"=>$this->getControllerActions($controller));
+					$arModules[$rc->getName()] = $data; 			
 				}
 			}
 		}
 		
+		return $arModules;
 	}	
 	
 	public function getControllerActions($controller)
 	{
+		$arMethods = array();
+		$ann = HelperFactory::getHelper("Annotations");
 		$rc = new ReflectionClass($controller);  
 		$methods = $rc->getMethods();
 		
@@ -34,9 +40,35 @@ class AclHelper extends Helper
 			foreach($methods as $method)
 			{
 				if(substr($method->getName(), -strlen("Action")) == "Action")
-				echo $method->getName();
+				{
+					$annotations = $ann->parse($method->getDocComment());
+					$data = array();
+					if($annotations !== false)
+					{
+						if(isset($annotations["@useAcl"]) && $annotations["@useAcl"] != "false")
+						{			
+							$data["friendlyName"] = $this->getMethodName($method->getName(), $annotations);
+							$data["name"] =	$method->getName();
+							$arMethods[$method->getName()] = $data; 	
+						}
+						else if(!isset($annotations["@useAcl"]))
+						{
+							$data["friendlyName"] = $this->getMethodName($method->getName(), $annotations);
+							$data["name"] =	$method->getName();
+							$arMethods[$method->getName()] = $data;
+						}
+					}
+					else
+					{
+						$data["friendlyName"] = $this->getMethodName($method->getName(), $annotations);
+						$data["name"] =	$method->getName();
+						$arMethods[$method->getName()] = $data;
+					}
+				}
 			}
 		}
+		
+		return $arMethods;
 	}
 	
 	
@@ -71,6 +103,18 @@ class AclHelper extends Helper
 		else
 		{
 			return str_replace("Controller", "", $module);
+		}
+	}
+	
+	protected function getMethodName($module, $annotations)
+	{
+		if(isset($annotations["@aclFriendlyName"]))
+		{
+			return $annotations["@aclFriendlyName"];					
+		}
+		else
+		{
+			return str_replace("Action", "", $module);
 		}
 	}
 }
