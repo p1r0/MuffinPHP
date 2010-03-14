@@ -1,4 +1,11 @@
 <?php
+/**
+ * Singleton class to handle the runtime configuration of 
+ * the site.
+ * 
+ * @author pyro
+ *
+ */
 class ConfigManager
 {
 	private $debugLevel = 0;
@@ -12,7 +19,11 @@ class ConfigManager
 	{
 		
 	}
-	
+	/**
+	 * Get the current instance of the ConfigManager or a new one if there is no
+	 * instance alive.
+	 * @return ConfigManager
+	 */
 	public static function &getInstance()
 	{
 		if(ConfigManager::$instance == null)

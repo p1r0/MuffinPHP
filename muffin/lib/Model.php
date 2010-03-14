@@ -193,7 +193,7 @@ class Model
 		/* @TODO Revisar esto. Mover a un helper */
 		$label = "";
 		
-		$arPalabreas = split("_", $name);
+		$arPalabreas = explode("_", $name);
 		
 		foreach($arPalabreas as $palabra)
 		{

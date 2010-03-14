@@ -45,6 +45,9 @@ class Controller
 	protected $viewLocale = "";
 	
 	protected $view = null;
+	
+	protected $viewBaseDir = null;
+	
 	/**
 	 * Inicializa la clase y expone los modelos que se listan 
 	 * en var $uses.
@@ -52,6 +55,8 @@ class Controller
 	 */
 	public function __construct()
 	{
+		$this->viewBaseDir = CLASSPATH."/views/";
+		
 		//Los models
 		if(isset($this->defaultUses))
 		{
@@ -127,9 +132,9 @@ class Controller
 		{
 			foreach($this->passedArgs as $key => $arg)
 			{
-				if(strpos($arg, ":") !== false)
+				if(strpos($arg, "::") !== false)
 				{
-					$tmp = split("\:", $arg);
+					$tmp = explode("\:\:", $arg);
 					$this->processedArgs[$tmp[0]] = $tmp[1];
 					unset($this->passedArgs[$key]);	
 				}
@@ -240,7 +245,7 @@ class Controller
 		}
 		
 		
-		include CLASSPATH."/views/".$view."View".$this->viewLocale.".php";
+		include $this->viewBaseDir.$view."View".$this->viewLocale.".php";
 	}
 	
 	public function paginate(&$model, $options=null)

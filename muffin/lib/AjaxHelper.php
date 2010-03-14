@@ -18,7 +18,10 @@ class AjaxHelper extends Helper
 		{
 			foreach($obj as $key => $value)
 			{
-				$obj[$key] = $this->html2UnicodeJsString($value);
+				if(is_string($value))
+				{
+					$obj[$key] = $this->html2UnicodeJsString($value);	
+				}
 			}
 		}
 		else
