@@ -23,19 +23,12 @@
 /**
  * 
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
+ * 
+ * Main class for muffin exceptions
  *
  */
-
-class _404Controller extends AppController 
+class MuffinException extends Exception
 {
-	
-	public function indexAction()
-	{
-		$this->preview();
-		
-		$this->expose("pageTitle", "404");
-	}
-	
 	
 }
 ?>

@@ -25,17 +25,12 @@
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
  *
  */
-
-class _404Controller extends AppController 
+class OutputDecorator
 {
-	
-	public function indexAction()
+	public static function prepareText($text)
 	{
-		$this->preview();
-		
-		$this->expose("pageTitle", "404");
+		return stripslashes($text);
 	}
-	
 	
 }
 ?>

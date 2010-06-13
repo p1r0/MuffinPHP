@@ -1,5 +1,29 @@
 <?php
 /**
+ * 
+ *  Copyright 2009 BinarySputnik Co - http://binarysputnik.com
+ * 
+ * 
+ *  This file is part of MuffinPHP.
+ *
+ *  MuffinPHP is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  MuffinPHP is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * 
+ * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
+ *
  * HTML Helper.
  * 
  * This class is in charge of resolving path for differnt types
@@ -11,6 +35,19 @@
  */
 class HtmlHelper extends Helper
 {
+	private $app_path;
+	
+	
+	public function __construct()
+	{
+		$this->app_path = APP_PATH;
+		$configManager = ConfigManager::getInstance();
+		if($configManager->valueExists('global.app_path'))
+		{
+			$this->app_path = $configManager->getValue('global.app_path');
+		}
+	}
+	
 	/**
 	 * Returns the URL for an image using the current configuration
 	 *
@@ -19,7 +56,7 @@ class HtmlHelper extends Helper
 	 */
 	public function getImage($img)
 	{
-		return IMGS_PATH."/".$img;
+		return $this->app_path.IMGS_PATH."/".$img;
 	}
 	
 	/**
@@ -30,7 +67,7 @@ class HtmlHelper extends Helper
 	 */
 	public function getCss($css)
 	{
-		return CSS_PATH."/".$css;
+		return $this->app_path.CSS_PATH."/".$css;
 	}
 	
 	/**
@@ -41,7 +78,7 @@ class HtmlHelper extends Helper
 	 */
 	public function getJs($js)
 	{
-		return JS_PATH."/".$js;
+		return $this->app_path.JS_PATH."/".$js;
 	}
 	
 	/**
@@ -52,7 +89,7 @@ class HtmlHelper extends Helper
 	 */
 	public function getFlash($flash)
 	{
-		return FLASH_PATH."/".$flash;
+		return $this->app_path.FLASH_PATH."/".$flash;
 	}
 	
 	/**
@@ -63,7 +100,7 @@ class HtmlHelper extends Helper
 	 */
 	public function getOther($file)
 	{
-		return OTHER_PATH."/".$file;
+		return $this->app_path.OTHER_PATH."/".$file;
 	}
 	
 	/**
@@ -97,7 +134,7 @@ class HtmlHelper extends Helper
 	
 	public function getUrl($target)
 	{
-		return APP_PATH."/".$target;
+		return $this->app_path."/".$target;
 	}
 	
 	

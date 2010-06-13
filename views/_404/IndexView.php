@@ -5,18 +5,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="<?php echo $html->getCss("mesas.css"); ?>" rel=stylesheet />
-<title>404 - P&aacute;gina No Econtrada</title>
+<link href="<?php echo $html->getCss("reset.css"); ?>" rel=stylesheet />
+<title>404 - Page Not found</title>
 </head>
 <body class="_404Cuerpo">
 <div class="_404Titulo">
-	No Encontrado
+	Not Found
 </div>
 <div class="_404SubTitulo">
-	La p&aacute;gina buscada no existe
+	The page you are looking for does not exist.
 </div>
 <div style="margin-top:25px">
-	Revise la direcci&oacute;n.
+	Check the entered url.
 </div>
 </body>
 

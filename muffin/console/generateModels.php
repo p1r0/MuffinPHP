@@ -13,6 +13,7 @@ $manager = Doctrine_Manager::getInstance();
 $conn = Doctrine_Manager::connection("{$db_conn_type}://{$db_user}:{$db_pass}@{$db_host}/{$db_name}", 'doctrine');
 
 $manager->setAttribute(Doctrine::ATTR_MODEL_LOADING, Doctrine::MODEL_LOADING_CONSERVATIVE);
+$conn->setAttribute(Doctrine::ATTR_USE_NATIVE_ENUM, true);
 
 Doctrine::dropDatabases();
 Doctrine::createDatabases();

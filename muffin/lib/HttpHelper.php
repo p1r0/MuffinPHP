@@ -1,6 +1,36 @@
 <?php
+/**
+ * 
+ *  Copyright 2009 BinarySputnik Co - http://binarysputnik.com
+ * 
+ * 
+ *  This file is part of MuffinPHP.
+ *
+ *  MuffinPHP is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  MuffinPHP is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * 
+ * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
+ *
+ */
 class HttpHelper extends Helper 
 {
+	
+	public $defaultUrlPrefix = "";
+	public $locale = "";
+	
 	//@TODO Add parameters parsing for the no MOD_REWRITE version
 	
 	public function parseGet($get)
@@ -28,15 +58,21 @@ class HttpHelper extends Helper
 		return $ar;
 	}
 	
-	public function getControllerUrl($params)
+	public function getControllerUrl($params, $prefix = "")
 	{
+		$app_path = APP_PATH;
+		$configManager = ConfigManager::getInstance();
+		if($configManager->valueExists('global.app_path'))
+		{
+			$app_path = $configManager->getValue('global.app_path');
+		}
 		$href = "#";
 		
 		if(!MOD_REWRITE)
 		{
 			if(isset($params["controller"]))
 			{
-				$href = APP_PATH."/index.php?opcion=".$params["controller"];
+				$href = $app_path."/index.php?opcion=".$params["controller"];
 				if(isset($params["action"]))
 				{
 					$href .= "&action=".$params["action"];
@@ -45,7 +81,21 @@ class HttpHelper extends Helper
 		}
 		else
 		{
-			$href = APP_PATH;
+			$href = $app_path;
+			
+			if($this->locale != '')
+			{
+				$href .= "/".$this->locale;
+			}
+			
+			if($prefix != "")
+			{
+				$href .= "/".$prefix;
+			}
+			else if($this->defaultUrlPrefix != "")
+			{
+				$href .= "/".$this->defaultUrlPrefix;
+			}
 			
 			if(isset($params["controller"]))
 			{

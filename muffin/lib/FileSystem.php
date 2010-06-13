@@ -25,17 +25,11 @@
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
  *
  */
-
-class _404Controller extends AppController 
+class FileSystem
 {
-	
-	public function indexAction()
+	public static function autoload($class_name) 
 	{
-		$this->preview();
-		
-		$this->expose("pageTitle", "404");
+		@include_once ($class_name.'.php');
 	}
-	
-	
 }
 ?>

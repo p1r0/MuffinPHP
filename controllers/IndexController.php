@@ -4,9 +4,10 @@ class IndexController extends AppController
 {	
 	public function indexAction()
 	{
-		parent::indexAction();
-		
-		$this->expose("pageTitle", "Inicio");
+		$this->preview();
+				
+		$this->expose("pageTitle", tr("New App Home Page!"));
+
 	}
 }
 ?>

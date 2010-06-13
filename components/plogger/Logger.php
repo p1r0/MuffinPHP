@@ -230,7 +230,7 @@ class Logger
 	private function getMaxFileSize()
 	{
 		//La unidad
-		$ar = split(" ", $this->maxFileSize);
+		$ar = explode(" ", $this->maxFileSize);
 		
 		$uni = count($ar > 1) ? $ar[1] : "k";
 		$val = $ar[0];

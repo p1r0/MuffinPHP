@@ -1,5 +1,31 @@
 <?php
 /**
+ * 
+ *  Copyright 2009 BinarySputnik Co - http://binarysputnik.com
+ * 
+ * 
+ *  This file is part of MuffinPHP.
+ *
+ *  MuffinPHP is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  MuffinPHP is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * 
+ * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
+ *
+ */
+/**
  * Representa un Controlador
  *
  */
@@ -102,7 +128,7 @@ class Controller
 		}
 		
 		//i18n
-		$i18nFileName = strtolower(str_replace("Controller", "", get_class($this))).$this->viewLocale.'.po';
+		$i18nFileName = strtolower(str_replace("Controller", "", get_class($this))).'.'.$this->viewLocale.'.po';
 		I18nHelper::getInstance()->loadPoFile(I18N_PATH.'/'.$i18nFileName);
 	}
 	
@@ -244,8 +270,13 @@ class Controller
 			}
 		}
 		
-		
-		include $this->viewBaseDir.$view."View".$this->viewLocale.".php";
+		$viewFileName = $this->viewBaseDir.$view."View.".$this->viewLocale.".php";
+		clearstatcache();
+		if(!file_exists($viewFileName))
+		{
+			$viewFileName = $this->viewBaseDir.$view."View.php";
+		}
+		include $viewFileName;
 	}
 	
 	public function paginate(&$model, $options=null)
@@ -340,7 +371,7 @@ class Controller
 	{
 		if($locale != "")
 		{
-			$this->viewLocale = "_".$locale;
+			$this->viewLocale = $locale;
 		}
 		else
 		{
@@ -363,7 +394,7 @@ class Controller
 		return $this->view;
 	}
 	
-	public function addFilter(Filter $filter)
+	public function addFilter(Filter &$filter)
 	{
 		$this->filters[] = $filter;	
 	}
@@ -377,11 +408,13 @@ class Controller
 				unset($this->filters[$i]);
 			}
 		}
-		$this->filters[] = $filter;	
+		//$this->filters[] = $filter;	
 	}
 	
-	public function applyFilters()
+	public function applyFilters(&$args)
 	{
+		$this->prefilter(&$args);
+		
 		$ret = true;
 	
 		for($i = 0; $i < count($this->filters); $i++)
@@ -395,6 +428,12 @@ class Controller
 	public function isDoctrineLoaded()
 	{
 		return Controller::$isDoctrineLoaded;
+	}
+	
+	//This is here just to be overriden
+	public function prefilter(&$args)
+	{
+		
 	}
 	
 	protected function startUpDoctrine()

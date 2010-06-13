@@ -25,17 +25,8 @@
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
  *
  */
-
-class _404Controller extends AppController 
+class MissingClassException extends MuffinException
 {
-	
-	public function indexAction()
-	{
-		$this->preview();
-		
-		$this->expose("pageTitle", "404");
-	}
-	
 	
 }
 ?>

@@ -1,13 +1,38 @@
 <?php
+/**
+ * 
+ *  Copyright 2009 BinarySputnik Co - http://binarysputnik.com
+ * 
+ * 
+ *  This file is part of MuffinPHP.
+ *
+ *  MuffinPHP is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  MuffinPHP is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * 
+ * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
+ *
+ */
 class AclHelper extends Helper
 {
 	public function getModulesList()
 	{
-		$arModules = array();
 		$ann = HelperFactory::getHelper("Annotations");
 		
 		$ctls = $this->getControllers();
-
+		print "<pre>";
 		foreach($ctls as $controller)
 		{
 			
@@ -16,22 +41,17 @@ class AclHelper extends Helper
 			if($annotations !== false)
 			{
 				if(isset($annotations["@useAcl"]) && $annotations["@useAcl"] == "true")
-				{	
-					$data = array("name"=>$rc->getName(),
-								  "friendlyName"=>$this->getModuleName($rc->getName(), $annotations), 
-								  "methods"=>$this->getControllerActions($controller));
-					$arModules[$rc->getName()] = $data; 			
+				{
+					echo $this->getModuleName($controller, $annotations);				
+					$this->getControllerActions($controller);	
 				}
 			}
 		}
 		
-		return $arModules;
 	}	
 	
 	public function getControllerActions($controller)
 	{
-		$arMethods = array();
-		$ann = HelperFactory::getHelper("Annotations");
 		$rc = new ReflectionClass($controller);  
 		$methods = $rc->getMethods();
 		
@@ -40,35 +60,9 @@ class AclHelper extends Helper
 			foreach($methods as $method)
 			{
 				if(substr($method->getName(), -strlen("Action")) == "Action")
-				{
-					$annotations = $ann->parse($method->getDocComment());
-					$data = array();
-					if($annotations !== false)
-					{
-						if(isset($annotations["@useAcl"]) && $annotations["@useAcl"] != "false")
-						{			
-							$data["friendlyName"] = $this->getMethodName($method->getName(), $annotations);
-							$data["name"] =	$method->getName();
-							$arMethods[$method->getName()] = $data; 	
-						}
-						else if(!isset($annotations["@useAcl"]))
-						{
-							$data["friendlyName"] = $this->getMethodName($method->getName(), $annotations);
-							$data["name"] =	$method->getName();
-							$arMethods[$method->getName()] = $data;
-						}
-					}
-					else
-					{
-						$data["friendlyName"] = $this->getMethodName($method->getName(), $annotations);
-						$data["name"] =	$method->getName();
-						$arMethods[$method->getName()] = $data;
-					}
-				}
+				echo $method->getName();
 			}
 		}
-		
-		return $arMethods;
 	}
 	
 	
@@ -103,18 +97,6 @@ class AclHelper extends Helper
 		else
 		{
 			return str_replace("Controller", "", $module);
-		}
-	}
-	
-	protected function getMethodName($module, $annotations)
-	{
-		if(isset($annotations["@aclFriendlyName"]))
-		{
-			return $annotations["@aclFriendlyName"];					
-		}
-		else
-		{
-			return str_replace("Action", "", $module);
 		}
 	}
 }
