@@ -20,64 +20,118 @@
  *
  */
 
-/**
- * 
- * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
- *
- */
-/**
- * Representa un Controlador
- *
- */
-
+ /**
+  * Convenience functions to ease code writing
+  */
 require "convenience.php";
 
+/**
+ * The main Controller class of MuffinPHP.
+ * @package MuffinPHP
+ * @subpackage Core
+ * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
+ */
 class Controller
 {
 	/**
-	 * Todas la varibles que se expondrán a las vistas.
-	 *
+	 * All variables that will be exposed to views
 	 * @var Array
 	 */
 	protected $exposedVars = array();
 	
+    /**
+     * $_POST and $_GET merged data.
+     * @var Array
+     */
 	public $data = null;
 	
 	/**
-	 * Seteos para el paginador.
-	 *
+	 * Setting for Paginator
 	 * @var Array
 	 */
 	protected $paginate = null;
 	
+    /**
+	 * Arguments passed in the url
+	 * @var Array
+	 */
 	protected $passedArgs = array();
 	
+    /**
+	 * Special named arguments passed in the url as
+     * <code>name::value</code>
+	 * @var Array
+	 */
 	protected $processedArgs = array();
 	
+    /**
+	 * The action set
+	 * @var string
+	 */
 	protected $action = null;
 	
+    /**
+	 * If using a Form it is can be set to true or false
+     * upon validation and will affect the FormHelper 
+     * behaviour.
+	 * @var boolean
+	 */
 	public $isValid = true;
 	
+    /**
+	 * If using a Form it is can be set to true or false
+     * upon currend state. It will affect the FormHelper
+     * behaviour.
+	 * @var boolean
+	 */
 	public $isEdit = false;
 	
+    /**
+	 * The current layout.
+	 * @var string
+	 */
 	protected $layout = "Default";
 	
+    /**
+	 * Array of filters in use
+	 * @var Array
+	 */
 	private $filters = array();
 	
+    /**
+	 * If DoctrinePHP was loaded or not
+	 * @var boolean
+	 */
 	protected static $isDoctrineLoaded = false;
 	
+    /**
+	 * True if the Controller mut render the default layout or not
+	 * @var boolean
+	 */
 	protected $renderDefault = true;
 	
+    /**
+	 * The controller current locale
+	 * @var string
+	 */
 	protected $viewLocale = "";
 	
+    /**
+	 * The controller current view
+	 * @var string
+	 */
 	protected $view = null;
 	
+    /**
+	 * The director where the Controller must look for views
+	 * @var string
+	 */
 	protected $viewBaseDir = null;
 	
 	/**
-	 * Inicializa la clase y expone los modelos que se listan 
-	 * en var $uses.
-	 *
+	 * Contructor initializes $viewBaseDir and loads all Helpers and
+     * models.
+	 * Then it initializes i18n support.
 	 */
 	public function __construct()
 	{
@@ -169,11 +223,11 @@ class Controller
 	}
 	
 	/**
-	 * Expone una varibales con el nombre $varName y el valor
-	 * $value a las vistas.
+	 * It exposes variables with the name $varName and value
+	 * $value so the views can use then with just $$varName
 	 *
-	 * @param String $varName Nombre que tendrá la variable
-	 * @param Object $value El valor de la variable.
+	 * @param string $varName Name for the exposed variable,
+	 * @param Object $value Value for the exposed variable.
 	 */
 	protected function expose($varName, $value)
 	{
@@ -181,11 +235,9 @@ class Controller
 	}
 	
 	/**
-	 * Renderiza la vista correspondiente al controlador dentro
-	 * de la vista por defecto (DefaultView) exponiendo su contenido
-	 * en la variable $content que debe ser renderizada detro de la
-	 * vista por defecto.
-	 *
+	 * It renders the current view within the current layout and
+     * exposes the result in $content so this variable must be
+     * printed (echoed) within the layout.
 	 */
 	public function render($action = "")
 	{
@@ -223,8 +275,7 @@ class Controller
 	}
 	
 	/**
-	 * Renderiza la vista por defecto.
-	 *
+	 * Renderds the default view
 	 */
 	public function renderDefault()
 	{
@@ -236,20 +287,20 @@ class Controller
 	}
 	
 	/**
-	 * Expone las variables y renderiza una vista.
+	 * Exposes the variables and renders the view $view.
 	 *
-	 * @param String $view el nombre de la vista sin la palabre view.
+	 * @param string $view name of the view to render
 	 */
 	protected function renderView($view)
 	{
 		
-		//Las variables
+		//The variables
 		foreach($this->exposedVars as $key => $val)
 		{
 			$$key = $val;
 		}
 		
-		//Los helpers
+		//The helpers
 		if(isset($this->defaultHelpers))
 		{
 			foreach($this->defaultHelpers as $helper)

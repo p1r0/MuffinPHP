@@ -23,12 +23,23 @@
 /**
  * 
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
+ * @package MuffinPHP
+ * @subpackage Helpers
  *
  */
 class Helper
 {
+    /**
+     * Instance of the Controller that instanciated this Helper
+     * @access protected
+     * @var Controller 
+     */
 	protected $controler = null;
 	
+    /**
+     * This function sets up {@link $controler}
+     * @param Controller &$controller instance of the calling controller
+     */
 	public function  startUp(&$controller)
 	{
 		$this->controler = $controller;

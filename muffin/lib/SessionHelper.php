@@ -20,13 +20,21 @@
  *
  */
 
-/**
- * 
+ /**
+ * The SessionHelper is used to manage session values with muffin
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
- *
+ * @package MuffinPHP
+ * @subpackage Helpers
  */
 class SessionHelper extends Helper
 {
+    /**
+     * Returns a value stored in the session identified
+     * by $key
+     * @param string $key the key of the value to be retrieved
+     * @return the value of the key
+     * @throws Generic not found Exception
+     */
 	public static function getValue($key)
 	{
 		if(isset($_SESSION[APP_NAME][$key]))
@@ -39,16 +47,31 @@ class SessionHelper extends Helper
 		}
 	}
 	
+    /**
+     * Returns a true if the value for $key exists in session
+     * @param string $key the key of the value to be checked
+     * @return boolean
+     */
 	public static function hasValue($key)
 	{
 		return isset($_SESSION[APP_NAME][$key]);
 	}
 	
+    /**
+     * Sets a value in the session
+     * @param string $key the key of the value to be set
+     * @param $value the value to be set
+     */
 	public static function setValue($key, $value)
 	{
 		$_SESSION[APP_NAME][$key] = $value;
 	}
 	
+    /**
+     * Removes a value from the session identified by $key
+     * @param string $key the key of the value to be removed
+     * @throws Generic not found Exception
+     */
 	public static function deleteValue($key)
 	{
 		if(isset($_SESSION[APP_NAME][$key]))
@@ -61,6 +84,9 @@ class SessionHelper extends Helper
 		}
 	}
 	
+    /**
+     * Deletes all values fro the session
+     */
 	public static function deleteSession()
 	{
 		unset($_SESSION[APP_NAME]); 
