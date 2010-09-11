@@ -60,5 +60,10 @@ class SessionHelper extends Helper
 			throw new Exception("Session value not found for key '$key'");
 		}
 	}
+	
+	public static function deleteSession()
+	{
+		unset($_SESSION[APP_NAME]); 
+	}
 }
 ?>
