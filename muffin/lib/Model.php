@@ -24,7 +24,7 @@
  * 
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
  *
- * Representa un Modelo
+ * Represents a model.
  *
  */
 class Model
@@ -32,12 +32,13 @@ class Model
 	protected $lastError = "";
 	protected $logger;
 	protected $validations = null;
+	protected $dataObject = null;
 	
 	/**
 	 * Constructor
 	 *
 	 */
-	public function __construct()
+	public function __construct($dataObject = null)
 	{
 		$this->logger = new Logger(get_class($this));
 		//Los models
@@ -60,119 +61,90 @@ class Model
 				$this->$varName = ModelFactory::getModel($model);
 			}
 		}
+		
+		if($dataObject == null)
+		{
+			$dataObject = str_replace('Model', "", get_class($this));
+			$this->dataObject = $dataObject;
+		}
+		else if($dataObject != "")
+		{
+			$this->dataObject = $dataObject; 
+		}
 	}
 	
-	/**
-	 * Busca y trae todos los registros de la tabla asociada
-	 * al modelo.
-	 *
-	 * Ejemplo;
-	 * <code>
-	 * $modelo->findAll(array("conditions"=>" id = 1", "order" => "title"));
-	 * </code>
-	 * 
-	 * @param Array $options Las opciones disponibles son "contitions" y "order".
-	 * 				<br>La primera es para usar como WHERE y la segunda como ORDER BY.
-	 * @return Array Todos los registros de la tabla con sus valores, 
-	 * 				 indexado por el nombre de la columna
-	 * 
-	 * 
-	 */
-	public function findAll($options = null)
+	public function save(array $data)
 	{
-		$ret = array();
-		
-		$table = isset($this->table) ? $this->table : str_replace("Model", "", get_class($this));
-		$sql = isset($this->sql) ? $this->sql : "select * from $table where 1  = 1  ";
-		
-		if(isset($options["conditions"]))
+		if($this->exists($data))
 		{
-			$sql .= " and ".$options["conditions"];
+			echo "will update";
 		}
-		
-		if(isset($options["order"]))
+		else 
 		{
-			$sql .= " order by ".$options["order"];
+			echo "will insert";
+			$this->add($data);
 		}
-		
-		if(isset($options["limit"]))
-		{
-			$sql .= " limit ".$options["limit"];
-		}
-		
-		$this->logger->debug($sql);
-		
-	//print "<br>SQL: ".$sql."<br>";
-		
-		$con = $_SESSION[APP_NAME]["conn"];
-		$Conn1 = $con->abrirconexion();
-		
-		$rs = &$Conn1->Execute($sql);
-		$con->matarconexion($Conn1->_resultid);
-		
-		if(!$rs)
-		{
-			$ret = null;
-			//exit("SQL; ".$sql);
-		}
-		else
-		{
-			if($rs->RecordCount() > 0)
-			{
-				$ret = array();
-				$rs->moveFirst();
-				while(!$rs->EOF)
-				{
-					$ret[] = $rs->fields;
-					$rs->moveNext();
-				}
-			}
-		}
-		
-		return $ret;
 	}
 	
-	public function count($options)
+	public function add(array $data)
 	{
-		$table = isset($this->table) ? $this->table : str_replace("Model", "", get_class($this));
-		$sql = "select count(*) as count from {$table} where 1 = 1";
+		include_once('data_objects/'.$this->dataObject.'.php');
+		$obj = new $this->dataObject();
+		
+		foreach($data as $key => $value)
+		{
+			$obj->$key = $value;
+		}
+		
+		$obj->save();
+	}
+	
+	public function update(array $data)
+	{
+		
+	}
+	
+	public function exists(array $data)
+	{
+		//if($this->dataObject != null)
+		//{
+		//	include_once('data_objects/'.$this->dataObject.'.php');
+		//}
+		
+		$table = Doctrine::getTable($this->dataObject);
 
-		if(isset($options["conditions"]))
+		$columns = $table->getColumns();
+		//$colName = $table->getColumnNames();
+		
+		$q = Doctrine_Query::create()
+			    ->select('*')
+			    ->from($this->dataObject);
+		
+		foreach ($columns as $colName => $column)
 		{
-			$sql .= " and ".$options["conditions"];
-		}
-		
-		$this->logger->debug("SQL: ", $sql);
-		
-		//print "<br>SQL: ".$sql."<br>";
-		
-		$con = $_SESSION[APP_NAME]["conn"];
-		$Conn1 = $con->abrirconexion();
-		
-		$rs = &$Conn1->Execute($sql);
-		$con->matarconexion($Conn1->_resultid);
-		
-		if(!$rs)
-		{
-			$ret = null;
-			//exit("SQL; ".$sql);
-		}
-		else
-		{
-			if($rs->RecordCount() > 0)
+			if(isset($column['primary']) && $column['primary'] == 1)
 			{
-				$ret = array();
-				$rs->moveFirst();
-				$ret = $rs->fields["count"];
+				echo $colName.' is PRIMAY<br>';
+				if(!isset($data[$colName]))
+				{
+					return false;
+				}
+				$q->andWhere("$colName = ?", $data[$colName]);
+			}
+			else 
+			{
+				echo $colName.' is NOT PRIMAY<br>';
 			}
 		}
 		
-		return $ret;
-	}
-	
-	public function save($data)
-	{
-		throw new Exception("Not yet implemented. Must be implemented in child classes.");
+		if($q->count() > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;	
+		}
 	}
 	
 	public function validate($data, &$errors)
@@ -185,13 +157,7 @@ class Model
 			{
 				if(isset($this->validations[$key]))
 				{
-					if(strtolower($this->validations[$key]) == "notnull")
-					{
-						if(!$this->validateNotNull($value))
-						{
-							$errors[$key] = $this->formatLabel($key)." no puede ser vac&iacute;o.";
-						}
-					}
+					
 				}
 			}	
 		}
@@ -209,27 +175,6 @@ class Model
 		{
 			return true;
 		}
-	}
-	
-	protected function formatLabel($name)
-	{
-		/* @TODO Revisar esto. Mover a un helper */
-		$label = "";
-		
-		$arPalabreas = explode("_", $name);
-		
-		foreach($arPalabreas as $palabra)
-		{
-			if($label != "")
-			{
-				$label .= " ";
-			}
-			
-			$palabra[0] = strtoupper($palabra[0]);  
-			$label .= $palabra;
-		}
-		
-		return "&quot;".$label."&quot;";
 	}
 	
 	public function getLastError()
