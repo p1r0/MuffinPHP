@@ -34,6 +34,17 @@ class DefaultDispatcher extends Dispatcher
 		
 		try
 		{
+			$staticRoute = $this->getCotrollerByAlias(ucfirst($conf["controller"]));
+			
+			if($staticRoute !== false)
+			{
+				$conf["controller"] = $staticRoute['controller'];
+				if($staticRoute['action'] != '')
+				{
+					$conf["action"] = $staticRoute['action'];
+				}
+			}
+			
 			$controller = ControllerFactory::getController(ucfirst($conf["controller"]));
 			$controller->applyFilters($conf);
 			$action =  $conf["action"]."Action";

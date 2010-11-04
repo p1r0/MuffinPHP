@@ -103,19 +103,20 @@ class HttpHelper extends Helper
 				if(isset($params["action"]))
 				{
 					$href .= "/".$params["action"];
-					if(isset($params["params"]))
+				}
+				
+				if(isset($params["params"]))
+				{
+					if(is_array($params["params"]))
 					{
-						if(is_array($params["params"]))
+						foreach($params["params"] as $param)
 						{
-							foreach($params["params"] as $param)
-							{
-								$href .= "/".$param;
-							}
+							$href .= "/".$param;
 						}
-						else
-						{
-							$href .= "/".$params["params"];
-						}
+					}
+					else
+					{
+						$href .= "/".$params["params"];
 					}
 				}
 			}

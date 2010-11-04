@@ -23,7 +23,7 @@
  /**
   * Convenience functions to ease code writing
   */
-require "convenience.php";
+require_once "convenience.php";
 
 /**
  * The main Controller class of MuffinPHP.

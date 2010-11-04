@@ -41,7 +41,7 @@ class ControllerFactory
 	{
 		if(!self::controllerExists($controller))
 		{
-			throw new MissingControllerException();
+			throw new MissingControllerException($controller);
 		}
 		$className = $controller."Controller";
 		$class = new $className;

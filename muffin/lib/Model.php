@@ -27,6 +27,8 @@
  * Represents a model.
  *
  */
+require_once "convenience.php";
+
 class Model
 {
 	protected $lastError = "";
@@ -81,13 +83,18 @@ class Model
 		}
 		else 
 		{
-			echo "will insert";
 			$this->add($data);
 		}
 	}
 	
 	public function add(array $data)
 	{
+		$errors = array();
+		if(!$this->validate($data, 'add', $errors))
+		{
+			return $errors;
+		}
+		
 		include_once('data_objects/'.$this->dataObject.'.php');
 		$obj = new $this->dataObject();
 		
@@ -97,11 +104,17 @@ class Model
 		}
 		
 		$obj->save();
+		
+		return true;
 	}
 	
 	public function update(array $data)
 	{
-		
+		$errors = array();
+		if(!$this->validate($data, 'update', $errors))
+		{
+			return $error;
+		}
 	}
 	
 	public function exists(array $data)
@@ -124,16 +137,11 @@ class Model
 		{
 			if(isset($column['primary']) && $column['primary'] == 1)
 			{
-				echo $colName.' is PRIMAY<br>';
 				if(!isset($data[$colName]))
 				{
 					return false;
 				}
 				$q->andWhere("$colName = ?", $data[$colName]);
-			}
-			else 
-			{
-				echo $colName.' is NOT PRIMAY<br>';
 			}
 		}
 		
@@ -147,7 +155,7 @@ class Model
 		}
 	}
 	
-	public function validate($data, &$errors)
+	public function validate($data, $action, &$errors)
 	{
 		$errors = array();
 		

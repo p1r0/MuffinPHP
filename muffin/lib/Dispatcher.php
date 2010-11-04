@@ -25,8 +25,30 @@
  * @author Tabaré Caorsi <tcaorsi@binarysputnik.com>
  *
  */
-abstract class Dispatcher
+class Dispatcher
 {	
-	abstract function dispatch();  	
+	protected $staticRoutes = array();
+	
+	function dispatch()
+	{
+		
+	}  	
+	
+	public function addStaticRoute($alias, $controller, $action='')
+	{
+		$this->staticRoutes[$alias] = array('controller'=>$controller, 'action'=>$action); 
+	}
+	
+	protected function getCotrollerByAlias($alias)
+	{
+		if(!isset($this->staticRoutes[$alias]))
+		{
+			return false;
+		}
+		else
+		{
+			return $this->staticRoutes[$alias];
+		}
+	}
 }
 ?>

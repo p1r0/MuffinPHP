@@ -36,6 +36,7 @@ class ConfigManager
 	
 	private $values = array();
 	
+	
 	private function __construct()
 	{
 		
