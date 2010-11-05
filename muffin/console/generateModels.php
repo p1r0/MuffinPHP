@@ -2,7 +2,8 @@
 
 define("CLASSPATH", realpath(dirname(__FILE__)."/../.."));
 define("DOCTRINE_FOLDER", CLASSPATH."/3rdParty/Doctrine-1.1.0/lib");
-define("MODELS_FOLDER", CLASSPATH."/models");
+define("MODELS_FOLDER", CLASSPATH."/models/data_objects");
+define("YML_FOLDER", CLASSPATH."/models/yml");
 
 require_once(DOCTRINE_FOLDER.'/Doctrine.php');
 
@@ -17,7 +18,7 @@ $conn->setAttribute(Doctrine::ATTR_USE_NATIVE_ENUM, true);
 
 Doctrine::dropDatabases();
 Doctrine::createDatabases();
-Doctrine::generateModelsFromYaml(MODELS_FOLDER.'/yml/db.yml', MODELS_FOLDER);
+Doctrine::generateModelsFromYaml(YML_FOLDER.'/db.yml', MODELS_FOLDER);
 Doctrine::createTablesFromModels(MODELS_FOLDER);
 
 
