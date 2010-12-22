@@ -104,7 +104,10 @@ class FormHelper extends Helper
 	{
 		if((!$this->controler->isValid) || ($this->controler->isEdit))
 		{
-			$value = 'value="'.$this->controler->data[$name].'"';
+			if(isset($this->controler->data[$name]))
+			{
+				$value = 'value="'.$this->controler->data[$name].'"';
+			}
 		}
 		else
 		{
@@ -130,6 +133,21 @@ class FormHelper extends Helper
 		return $str;
 	}
 	
+    public function fieldRadio($name, $options = null)
+    {
+        if((!$this->controler->isValid) || ($this->controler->isEdit))
+        {
+            $value = isset($this->controler->data[$name]) && ($this->controler->data[$name] == true || $this->controler->data[$name] == "on") ? "checked" : "" ;
+        }
+        else
+        {
+            $value  =  isset($options["value"]) && ($options["value"] == true || $options["value"]) == "on" ? "checked" : "" ;
+        }
+        $str = '<input name="'.$name.'" id="'.$name.'" type="radio" '.$this->parseOptionsHTML($options).' '.$value.' />';
+        
+        return $str;
+    }
+    
 	public function fieldArea($name, $options)
 	{
 		if((!$this->controler->isValid) || ($this->controler->isEdit))
